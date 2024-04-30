@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 60px;
+            margin-bottom: 60px;
+        }
+
+        .second {
+            display: flex;
+            justify-content: center;
+        }
+
+        .second input {
+            width: 60%;
+            max-width: 400px;
+            padding: 10px 20px;
+            border: none;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .second button {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            font-size: 18px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .contain button {
+            background-color: #008cba;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .images {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .images>div {
+            margin-bottom: 20px;
+        }
+
+        .pic img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            transition: transform .2s;
+        }
+
+        .pic img:hover {
+            transform: scale(1.5);
+
+        }
+
+        .pic {
+            height: 300px;
+            width: 450px;
+            overflow: hidden;
+
+        }
+
+        .label {
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <h1>Image Search App</h1>
+        <div class="second">
+            <input type="text" placeholder="Search for images..."><button>Search</button>
+        </div>
+        <div class="images">
+        </div>
+        <div class="contain">
+            <button>Show more</button>
+        </div>
+
+    </div>
+    <script>
+        let c = 1;
+        parent = document.querySelector(".images");
+        input = document.querySelector("input");
+        btn1 = document.querySelector(".second button");
+        btn2 = document.querySelector(".contain button");
+        // GVpni9mde9_fzfhEEoCPSUL-upeOponQgTv1M-mTGzE https://api.unsplash.com/
+
+        btn1.addEventListener("click", async (e) => {
+            parent.innerText = "";
+            let val = input.value;
+            let a = await dataApi("https://api.unsplash.com/search/photos?client_id=GVpni9mde9_fzfhEEoCPSUL-upeOponQgTv1M-mTGzE&query=" + val)
+            console.log(a.results);
+            display(a);
+
+        })
+        btn2.addEventListener("click", async () => {
+            c++;
+            let val = input.value;
+            display(await dataApi("https://api.unsplash.com/search/photos?client_id=GVpni9mde9_fzfhEEoCPSUL-upeOponQgTv1M-mTGzE&query=" + val + "&page=" + c))
+        })
+        async function dataApi(url) {
+            const rep = await fetch(url);
+            const obj1 = await rep.json();
+            return obj1;
+        }
+        function display(arr) {
+
+            arr.results.forEach(ele => {
+                div = document.createElement("div");
+                pic = document.createElement("div");
+                pic.classList.add("pic")
+                img = document.createElement("img");
+                img.src = ele.urls.small;
+                pic.append(img);
+                label = document.createElement("div");
+                label.style.cssText = "text-align:center;"
+                label.classList.add("label");
+                label.innerText = ele.alt_description;
+                div.append(pic, label);
+                parent.append(div);
+            });
+        }
+    </script>
+</body>
+
+</html>
